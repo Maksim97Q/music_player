@@ -4,6 +4,8 @@ import com.music.music_player.entities.Album;
 import com.music.music_player.repository.AlbumRepository;
 import com.music.music_player.service.AlbumService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,5 +40,10 @@ public class AlbumServiceImpl implements AlbumService {
         if (findAlbumById(id) != null) {
             albumRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public Page<Album> findAll(Pageable pageable) {
+        return albumRepository.findAll(pageable);
     }
 }

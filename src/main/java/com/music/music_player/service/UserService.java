@@ -1,6 +1,8 @@
 package com.music.music_player.service;
 
 import com.music.music_player.entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     User createUser(User user);
@@ -10,4 +12,8 @@ public interface UserService {
     User updateUserById(User user, Long id);
 
     void deleteUserById(Long id);
+
+    Page<User> findAll(Pageable pageable);
+
+    User findByEmail(String email);
 }

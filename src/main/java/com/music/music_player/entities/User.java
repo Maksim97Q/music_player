@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,5 +33,16 @@ public class User {
     private List<Playlist> playlists;
     @ManyToMany
     private List<Performer> performers;
+    @ManyToOne
+    private Role role;
 
+    public void addPerformer(Performer performer) {
+        this.performers.add(performer);
+        performer.getUsers().add(this);
+    }
+
+    public void removePerformer(Performer performer) {
+        this.performers.remove(performer);
+        performer.getUsers().remove(this);
+    }
 }

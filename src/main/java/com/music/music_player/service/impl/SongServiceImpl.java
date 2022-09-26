@@ -4,6 +4,8 @@ import com.music.music_player.entities.Song;
 import com.music.music_player.repository.SongRepository;
 import com.music.music_player.service.SongService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,5 +38,10 @@ public class SongServiceImpl implements SongService {
         if (findSongById(id) != null) {
             songRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public Page<Song> findAll(Pageable pageable) {
+        return songRepository.findAll(pageable);
     }
 }

@@ -4,6 +4,8 @@ import com.music.music_player.entities.Playlist;
 import com.music.music_player.repository.PlaylistRepository;
 import com.music.music_player.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,5 +38,10 @@ public class PlaylistServiceImpl implements PlaylistService {
         if (findPlaylistById(id) != null) {
             playlistRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public Page<Playlist> findAll(Pageable pageable) {
+        return playlistRepository.findAll(pageable);
     }
 }
