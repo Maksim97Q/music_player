@@ -6,6 +6,7 @@ import com.music.music_player.repository.PerformerRepository;
 import com.music.music_player.repository.UserRepository;
 import com.music.music_player.service.PerformerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,23 +16,27 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class PerformerServiceImpl implements PerformerService {
     private final PerformerRepository performerRepository;
     private final CurrentUserServiceImpl currentUserService;
 
     @Override
     public Performer createPerformer(Performer performer) {
+        log.info("создание исполнителя: {}", performer);
         return performerRepository.save(performer);
     }
 
     @Override
     public Performer findPerformerById(Long id) {
+        log.info("получение исполнителя по id: {}", id);
         return performerRepository.findById(id).orElse(new Performer());
     }
 
     @Override
     @Transactional
     public Performer updatePerformerById(Performer performer, Long id) {
+        log.info("изменение исполнителя по id: {}", id);
         Performer performerById = findPerformerById(id);
         performerById.setName(performer.getName());
         return performerRepository.save(performerById);
@@ -40,6 +45,7 @@ public class PerformerServiceImpl implements PerformerService {
     @Override
     @Transactional
     public void deletePerformerById(Long id) {
+        log.info("удаление исполнителя по id: {}", id);
         if (findPerformerById(id) != null) {
             performerRepository.deleteById(id);
         }
@@ -47,6 +53,7 @@ public class PerformerServiceImpl implements PerformerService {
 
     @Override
     public Page<Performer> findAll(Pageable pageable) {
+        log.info("получение всех исполнителей");
         return performerRepository.findAll(pageable);
     }
 
@@ -61,6 +68,7 @@ public class PerformerServiceImpl implements PerformerService {
             user.addPerformer(performer);
             performer.setSubscribersCount(performer.getSubscribersCount() + 1);
             performerRepository.save(performer);
+            log.info("подписался на исполнителя по имени: {}", name);
             return performer;
         }
         return null;
@@ -77,6 +85,7 @@ public class PerformerServiceImpl implements PerformerService {
             performer.setSubscribersCount(performer.getSubscribersCount() - 1);
             user.removePerformer(performer);
             performerRepository.save(performer);
+            log.info("отписался от исполнителя по имени: {}", name);
             return performer;
         }
         return null;
