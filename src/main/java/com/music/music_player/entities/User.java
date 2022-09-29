@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -29,6 +26,8 @@ public class User {
     private String lastName;
     @Column
     private String password;
+    @Column
+    private Boolean enabled;
     @ManyToMany
     private List<Playlist> playlists;
     @ManyToMany

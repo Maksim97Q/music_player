@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         User byEmail = userRepository.findByEmail(user.getEmail());
         if (byEmail == null) {
+            user.setEnabled(false);
             user.setRole(new Role(1L, "ROLE_USER"));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     public boolean findByEmailAndPassword(String email, String password) {
         User user = findByEmail(email);
-        if (user != null) {
+        if (user != null && user.getEnabled()) {
             log.info("прошла проверка пароля по encode");
             return passwordEncoder.matches(password, user.getPassword());
         }
