@@ -1,6 +1,6 @@
 package com.music.music_player.config;
 
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

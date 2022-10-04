@@ -1,6 +1,6 @@
 package com.music.music_player.service.impl;
 
-import com.music.music_player.entities.Song;
+import com.music.music_player.domain.entities.Song;
 import com.music.music_player.repository.SongRepository;
 import com.music.music_player.service.SongService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public Song findSongById(Long id) {
         log.info("получение песни по id: {}", id);
-        return songRepository.findById(id).orElse(new Song());
+        return songRepository.findById(id).orElse(null);
     }
 
     @Override

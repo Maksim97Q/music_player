@@ -1,15 +1,17 @@
 package com.music.music_player.controller;
 
-import com.music.music_player.entities.Playlist;
-import com.music.music_player.service.impl.PlaylistServiceImpl;
+import com.music.music_player.domain.dto.request.PlaylistDtoRequest;
+import com.music.music_player.domain.dto.response.PlaylistDtoResponse;
+import com.music.music_player.domain.mapper.PlaylistMapper;
+import com.music.music_player.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,28 +21,38 @@ import static com.music.music_player.domain.util.UrlConstants.*;
 @RequestMapping(VERSION + PLAYLIST_URL)
 @RequiredArgsConstructor
 public class PlaylistController {
-    private final PlaylistServiceImpl playlistService;
+    private final PlaylistService playlistService;
+    private final PlaylistMapper playlistMapper;
 
     @GetMapping(ID)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Playlist> findById(@PathVariable Long id) {
-        return Optional.ofNullable(playlistService.findPlaylistById(id))
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<PlaylistDtoResponse> findById(@PathVariable Long id) {
+        return Optional.ofNullable(id)
+                .map(playlistService::findPlaylistById)
+                .map(playlistMapper::toPlaylistResponse)
                 .map(ResponseEntity.ok()::body)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
 //      @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Playlist> create(@RequestBody Playlist playlist) {
-        return Optional.ofNullable(playlistService.createPlaylist(playlist))
+    public ResponseEntity<PlaylistDtoResponse> create(@RequestBody @Valid PlaylistDtoRequest playlistDtoRequest) {
+        return Optional.ofNullable(playlistDtoRequest)
+                .map(playlistMapper::fromPlaylistRequest)
+                .map(playlistService::createPlaylist)
+                .map(playlistMapper::toPlaylistResponseSave)
                 .map(ResponseEntity.ok()::body)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping(ID)
 //     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Playlist> create(@RequestBody Playlist playlist, @PathVariable Long id) {
-        return Optional.ofNullable(playlistService.updatePlaylistById(playlist, id))
+    public ResponseEntity<PlaylistDtoResponse> update(@RequestBody PlaylistDtoRequest playlistDtoRequest,
+                                                      @PathVariable Long id) {
+        return Optional.ofNullable(playlistDtoRequest)
+                .map(playlistMapper::fromPlaylistRequest)
+                .map(playlist -> playlistService.updatePlaylistById(playlist, id))
+                .map(playlistMapper::toPlaylistResponse)
                 .map(ResponseEntity.ok()::body)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -53,9 +65,10 @@ public class PlaylistController {
     }
 
     @GetMapping(LIST_URL)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Playlist>> findAll(@PageableDefault(size = 5) Pageable pageable) {
-        List<Playlist> playlistList = playlistService.findAll(pageable).getContent();
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<PlaylistDtoResponse>> findAll(@PageableDefault(size = 5) Pageable pageable) {
+        List<PlaylistDtoResponse> playlistList = playlistService.findAll(pageable)
+                .map(playlistMapper::toPlaylistResponse).getContent();
         return new ResponseEntity<>(playlistList, HttpStatus.OK);
     }
 

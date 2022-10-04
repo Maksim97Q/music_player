@@ -1,7 +1,7 @@
 package com.music.music_player.service.impl;
 
-import com.music.music_player.entities.Role;
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.Role;
+import com.music.music_player.domain.entities.User;
 import com.music.music_player.repository.UserRepository;
 import com.music.music_player.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(Long id) {
         log.info("получение пользователя по id: {}", id);
-        return userRepository.findById(id).orElse(new User());
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
     public boolean findByEmailAndPassword(String email, String password) {
         User user = findByEmail(email);
         if (user != null && user.getEnabled()) {

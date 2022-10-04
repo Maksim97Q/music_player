@@ -1,4 +1,4 @@
-package com.music.music_player.entities;
+package com.music.music_player.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -8,10 +8,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -28,7 +25,6 @@ public class Performer {
     @Column
     private String description;
     @Column
-    @Value("0")
     private Integer subscribersCount;
     @JsonIgnore
     @ManyToMany(mappedBy = "performers")

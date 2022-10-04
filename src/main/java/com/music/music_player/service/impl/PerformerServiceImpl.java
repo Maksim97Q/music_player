@@ -1,9 +1,8 @@
 package com.music.music_player.service.impl;
 
-import com.music.music_player.entities.Performer;
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.Performer;
+import com.music.music_player.domain.entities.User;
 import com.music.music_player.repository.PerformerRepository;
-import com.music.music_player.repository.UserRepository;
 import com.music.music_player.service.PerformerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,13 +23,14 @@ public class PerformerServiceImpl implements PerformerService {
     @Override
     public Performer createPerformer(Performer performer) {
         log.info("создание исполнителя: {}", performer);
+        performer.setSubscribersCount(0);
         return performerRepository.save(performer);
     }
 
     @Override
     public Performer findPerformerById(Long id) {
         log.info("получение исполнителя по id: {}", id);
-        return performerRepository.findById(id).orElse(new Performer());
+        return performerRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -38,6 +38,7 @@ public class PerformerServiceImpl implements PerformerService {
     public Performer updatePerformerById(Performer performer, Long id) {
         log.info("изменение исполнителя по id: {}", id);
         Performer performerById = findPerformerById(id);
+        performerById.setDescription(performer.getDescription());
         performerById.setName(performer.getName());
         return performerRepository.save(performerById);
     }
@@ -57,6 +58,7 @@ public class PerformerServiceImpl implements PerformerService {
         return performerRepository.findAll(pageable);
     }
 
+    @Override
     @Transactional
     public Performer subscribeToPerformer(String name) {
         User user = currentUserService.getCurrentUser();
@@ -74,8 +76,9 @@ public class PerformerServiceImpl implements PerformerService {
         return null;
     }
 
+    @Override
     @Transactional
-    public Performer unsubscribeFromPerformer(String name) {
+    public Performer unSubscribeFromPerformer(String name) {
         User user = currentUserService.getCurrentUser();
         Performer performer = performerRepository.findByName(name);
         Optional<Performer> first = user.getPerformers().stream()

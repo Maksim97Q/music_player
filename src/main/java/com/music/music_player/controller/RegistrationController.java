@@ -1,6 +1,6 @@
 package com.music.music_player.controller;
 
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.User;
 import com.music.music_player.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

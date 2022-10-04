@@ -1,4 +1,4 @@
-package com.music.music_player.entities;
+package com.music.music_player.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.music.music_player.service.impl;
 
-import com.music.music_player.entities.ConfirmationToken;
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.ConfirmationToken;
+import com.music.music_player.domain.entities.User;
 import com.music.music_player.service.EmailConfirmationTokenService;
 import com.music.music_player.service.EmailSenderService;
 import com.music.music_player.service.RegistrationService;

@@ -1,7 +1,7 @@
 package com.music.music_player.service.impl;
 
 import com.music.music_player.config.CustomUserDetailsService;
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;

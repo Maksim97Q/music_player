@@ -1,15 +1,17 @@
 package com.music.music_player.controller;
 
-import com.music.music_player.entities.Song;
-import com.music.music_player.service.impl.SongServiceImpl;
+import com.music.music_player.domain.dto.request.SongDtoRequest;
+import com.music.music_player.domain.dto.response.SongDtoResponse;
+import com.music.music_player.domain.mapper.SongMapper;
+import com.music.music_player.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,28 +21,38 @@ import static com.music.music_player.domain.util.UrlConstants.*;
 @RequestMapping(VERSION + SONG_URL)
 @RequiredArgsConstructor
 public class SongController {
-    private final SongServiceImpl songService;
+    private final SongService songService;
+    private final SongMapper songMapper;
 
     @GetMapping(ID)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Song> findById(@PathVariable Long id) {
-        return Optional.ofNullable(songService.findSongById(id))
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<SongDtoResponse> findById(@PathVariable Long id) {
+        return Optional.ofNullable(id)
+                .map(songService::findSongById)
+                .map(songMapper::toSongResponse)
                 .map(ResponseEntity.ok()::body)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
 //     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Song> create(@RequestBody Song song) {
-        return Optional.ofNullable(songService.createSong(song))
+    public ResponseEntity<SongDtoResponse> create(@RequestBody @Valid SongDtoRequest songDtoRequest) {
+        return Optional.ofNullable(songDtoRequest)
+                .map(songMapper::fromSongRequest)
+                .map(songService::createSong)
+                .map(songMapper::toSongResponseSave)
                 .map(ResponseEntity.ok()::body)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping(ID)
 //     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Song> update(@RequestBody Song song, @PathVariable Long id) {
-        return Optional.ofNullable(songService.updateSongById(song, id))
+    public ResponseEntity<SongDtoResponse> update(@RequestBody @Valid SongDtoRequest songDtoRequest,
+                                                  @PathVariable Long id) {
+        return Optional.ofNullable(songDtoRequest)
+                .map(songMapper::fromSongRequest)
+                .map(song -> songService.updateSongById(song, id))
+                .map(songMapper::toSongResponse)
                 .map(ResponseEntity.ok()::body)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -53,9 +65,10 @@ public class SongController {
     }
 
     @GetMapping(LIST_URL)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Song>> findAll(@PageableDefault(size = 5) Pageable pageable) {
-        List<Song> songList = songService.findAll(pageable).getContent();
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<SongDtoResponse>> findAll(@PageableDefault(size = 5) Pageable pageable) {
+        List<SongDtoResponse> songList = songService.findAll(pageable)
+                .map(songMapper::toSongResponse).getContent();
         return new ResponseEntity<>(songList, HttpStatus.OK);
     }
 }

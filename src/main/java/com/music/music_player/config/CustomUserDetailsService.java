@@ -1,6 +1,6 @@
 package com.music.music_player.config;
 
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.User;
 import com.music.music_player.repository.UserRepository;
 import com.music.music_player.service.UserService;
 import lombok.RequiredArgsConstructor;

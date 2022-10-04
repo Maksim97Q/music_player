@@ -1,6 +1,6 @@
 package com.music.music_player.service;
 
-import com.music.music_player.entities.User;
+import com.music.music_player.domain.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +16,6 @@ public interface UserService {
     Page<User> findAll(Pageable pageable);
 
     User findByEmail(String email);
+
+    boolean findByEmailAndPassword(String email, String password);
 }

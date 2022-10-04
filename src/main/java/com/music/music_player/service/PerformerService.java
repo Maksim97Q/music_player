@@ -1,6 +1,6 @@
 package com.music.music_player.service;
 
-import com.music.music_player.entities.Performer;
+import com.music.music_player.domain.entities.Performer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,4 +14,8 @@ public interface PerformerService {
     void deletePerformerById(Long id);
 
     Page<Performer> findAll(Pageable pageable);
+
+    Performer subscribeToPerformer(String name);
+
+    Performer unSubscribeFromPerformer(String name);
 }

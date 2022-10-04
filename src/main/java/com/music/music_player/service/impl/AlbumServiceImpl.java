@@ -1,6 +1,6 @@
 package com.music.music_player.service.impl;
 
-import com.music.music_player.entities.Album;
+import com.music.music_player.domain.entities.Album;
 import com.music.music_player.repository.AlbumRepository;
 import com.music.music_player.service.AlbumService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
